@@ -6,7 +6,7 @@ LABEL maintainer="David Trigo <david.trigochavez@axa.com>"
 
 USER root
 
-COPY ./worker-entrypoint.sh /usr/local/bin/
+COPY ./docker/worker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/worker-entrypoint.sh
 
 USER sortinghat
