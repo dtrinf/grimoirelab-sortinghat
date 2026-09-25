@@ -1,46 +1,36 @@
-FROM python:3.12-slim-bookworm
-
-LABEL maintainer="Santiago Dueñas <sduenas@bitergia.com>"
-LABEL org.opencontainers.image.title="SortingHat"
-LABEL org.opencontainers.image.description="SortingHat service"
-LABEL org.opencontainers.image.licenses="GPL-3.0+"
-LABEL org.opencontainers.image.url="https://chaoss.github.io/grimoirelab/"
-LABEL org.opencontainers.image.documentation="https://sortinghat.readthedocs.io/"
-LABEL org.opencontainers.image.vendor="GrimoireLab project"
-LABEL org.opencontainers.image.authors="sduenas@bitergia.com"
+# FROM python:3.12-slim-bookworm
+FROM dhi.io/python:3.14-debian-dev
+LABEL maintainer="David Trigo <david.trigochavez@axa.com>"
 
 ENV TERM=xterm-256color
 
-# Create a user an a group
-RUN groupadd -r sortinghat && useradd -r -m -g sortinghat sortinghat
 
 # Install base packages
 RUN apt-get update && \
     apt-get install -qy \
-        --no-install-recommends \
-        bash locales sudo \
-        tree ccze psmisc \
-        unzip \
-        ssh ca-certificates \
-        dirmngr gnupg \
-        curl \
-        gcc \
-        pkg-config \
-        libmariadbclient-dev-compat && \
+    --no-install-recommends \
+    bash locales-all sudo \
+    tree ccze psmisc \
+    unzip passwd \
+    ssh ca-certificates \
+    dirmngr gnupg \
+    curl \
+    gcc \
+    pkg-config \
+    libmariadbclient-dev-compat && \
     apt-get purge && \
     apt-get clean && \
     find /var/lib/apt/lists -type f -delete
 
 # Configure locales
-RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
-    echo 'LANG="en_US.UTF-8"' > /etc/default/locale && \
-    dpkg-reconfigure --frontend=noninteractive locales && \
-    update-locale LANG=en_US.UTF-8
+RUN echo 'LANG="en_US.UTF-8"'>/etc/default/locale
 
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
-ENV LANG=C.UTF-8
+
+# Create a user an a group
+RUN groupadd -r sortinghat && useradd -r -m -g sortinghat sortinghat
 
 # Install SortingHat and dependencies
 #
