@@ -12,7 +12,7 @@ RUN apt-get update && \
     bash locales-all sudo \
     tree ccze psmisc \
     unzip passwd \
-    ssh ca-certificates \
+    ca-certificates \
     dirmngr gnupg \
     curl \
     gcc \
